@@ -16,7 +16,7 @@ const fadeUp = {
   }),
 };
 
-const motifIcons = ['Fish', 'Pineapple', 'Owl', 'Elephant', 'Seahorse'];
+
 
 export default function Home() {
   const navigate = useNavigate();
@@ -136,19 +136,15 @@ export default function Home() {
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 1, ease: [0.25, 0.1, 0.25, 1] }}
             >
-              <div className="relative w-full max-w-sm">
+              <div className="relative w-full max-w-md lg:max-w-xl">
                 <div
                   className="rounded-md w-full overflow-hidden bg-mocha-100 shadow-2xl relative"
-                  style={{ aspectRatio: '3/4' }}
+                  style={{ aspectRatio: '4/3' }}
                 >
-                  <video
-                    src="https://res.cloudinary.com/xtrw55ut/video/upload/coverreel1.webm"
-                    className="absolute top-1/2 left-1/2 max-w-none"
-                    style={{ width: '177.77%', height: '75%', transform: 'translate(-50%, -50%) rotate(-90deg)' }}
-                    autoPlay
-                    muted
-                    loop
-                    playsInline
+                  <img
+                    src="/images/covermain.webp"
+                    alt="Hero Saree"
+                    className="absolute inset-0 w-full h-full object-cover"
                   />
                 </div>
                 {/* Floating tag */}
@@ -168,17 +164,15 @@ export default function Home() {
       </section>
 
       {/* Motif Strip */}
-      <section className="border-y border-mocha-200 py-6 overflow-hidden">
-        <div className="flex gap-0 items-center">
-          {[...motifIcons, ...motifIcons].map((motif, i) => (
-            <div key={i} className="flex items-center gap-6 px-8 flex-shrink-0">
-              <span className="font-cinzel text-[10px] tracking-[0.25em] uppercase text-mocha-400">
-                {motif}
-              </span>
-              {i < [...motifIcons, ...motifIcons].length - 1 && (
-                <span className="text-gold-400">·</span>
-              )}
-            </div>
+      <section className="border-y border-mocha-200 overflow-hidden">
+        <div className="flex items-center w-max">
+          {[...Array(4)].map((_, i) => (
+            <img 
+              key={i}
+              src="/images/motifs.webp" 
+              alt="Brand Motifs" 
+              className="h-20 md:h-28 lg:h-32 w-auto object-contain" 
+            />
           ))}
         </div>
       </section>
@@ -188,9 +182,9 @@ export default function Home() {
         <div className="max-w-[90rem] mx-auto px-6 lg:px-10">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24 items-center">
             {/* Image grid */}
-            <div className="lg:col-span-7 grid grid-cols-3 gap-2 md:gap-4 lg:gap-6 w-full">
+            <div className="lg:col-span-7 grid grid-cols-3 gap-2 md:gap-4 lg:gap-6 w-full items-center">
               {/* Left Column - coverreel2 (Symmetrical to Right) */}
-              <div className="flex flex-col mt-16 md:mt-24 lg:mt-32">
+              <div className="flex flex-col">
                 <motion.div
                   className="rounded-md overflow-hidden bg-mocha-100 relative w-full"
                   style={{ aspectRatio: '9/16' }}
@@ -214,11 +208,11 @@ export default function Home() {
                 </motion.div>
               </div>
 
-              {/* Middle Column - sm2 (Highest) */}
-              <div className="flex flex-col mt-0">
+              {/* Middle Column - coverreel1 (Highest) */}
+              <div className="flex flex-col">
                 <motion.div
                   className="rounded-md overflow-hidden bg-mocha-100 relative w-full"
-                  style={{ aspectRatio: '9/16' }}
+                  style={{ aspectRatio: '3/4' }}
                   initial={{ opacity: 0, y: 40 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, margin: "200px" }}
@@ -226,8 +220,8 @@ export default function Home() {
                 >
                   {teaserInView && (
                     <video
-                      src="https://res.cloudinary.com/xtrw55ut/video/upload/sm2.webm"
-                      className="absolute inset-0 w-full h-full object-cover"
+                      src="https://res.cloudinary.com/xtrw55ut/video/upload/a_-90,so_3,eo_7/coverreel1.webm"
+                      className="absolute inset-0 w-full h-full object-cover object-[center_80%]"
                       autoPlay
                       muted
                       loop
@@ -238,7 +232,7 @@ export default function Home() {
               </div>
 
               {/* Right Column - coverreel3 (Symmetrical to Left) */}
-              <div className="flex flex-col mt-16 md:mt-24 lg:mt-32">
+              <div className="flex flex-col">
                 <motion.div
                   className="rounded-md overflow-hidden bg-mocha-50 relative w-full"
                   style={{ aspectRatio: '9/16' }}
@@ -249,7 +243,7 @@ export default function Home() {
                 >
                   {teaserInView && (
                     <video
-                      src="https://res.cloudinary.com/xtrw55ut/video/upload/coverreel3.webm"
+                      src="https://res.cloudinary.com/xtrw55ut/video/upload/eo_4/coverreel3.webm"
                       className="absolute top-1/2 left-1/2 max-w-none"
                       style={{ width: '177.77%', height: '56.25%', transform: 'translate(-50%, -50%) rotate(-90deg)' }}
                       autoPlay
