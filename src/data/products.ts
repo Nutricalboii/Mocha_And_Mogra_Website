@@ -3,6 +3,7 @@ export interface Product {
   name: string;
   motif: string;
   price: number;
+  priceUsd?: number;
   category: 'Saree' | 'Underskirt';
   personality: string[];
   keywords: string[];
@@ -20,6 +21,7 @@ export const products: Product[] = [
     name: 'SAPPHIRE MOGRA',
     motif: 'Cage',
     price: 9500,
+    priceUsd: 200,
     category: 'Saree',
     personality: ['Independent', 'Bold', 'Contemporary'],
     keywords: ['Silk', 'Cage Motif', 'Deep Blue', 'Statement'],
@@ -36,6 +38,7 @@ export const products: Product[] = [
     name: 'BUTTER MOGRA',
     motif: 'Pineapple',
     price: 9500,
+    priceUsd: 200,
     category: 'Saree',
     personality: ['Sunny', 'Fresh', 'Effortless'],
     keywords: ['Silk', 'Pineapple Motif', 'Butter Yellow', 'Contemporary'],
@@ -52,6 +55,7 @@ export const products: Product[] = [
     name: 'RUBY DOE',
     motif: 'Deer',
     price: 9500,
+    priceUsd: 200,
     category: 'Saree',
     personality: ['Soft', 'Romantic', 'Graceful'],
     keywords: ['Silk', 'Deer Motif', 'Ruby Tones', 'Romantic'],
@@ -68,6 +72,7 @@ export const products: Product[] = [
     name: 'JALPARIÉ',
     motif: 'Seahorse',
     price: 9500,
+    priceUsd: 200,
     category: 'Saree',
     personality: ['Elegant', 'Refined', 'Quiet Luxury'],
     keywords: ['Silk', 'Seahorse Motif', 'Artisan Embroidery', 'Premium'],
@@ -84,6 +89,7 @@ export const products: Product[] = [
     name: 'ROSÉ MOGRA',
     motif: 'Owl',
     price: 9500,
+    priceUsd: 200,
     category: 'Saree',
     personality: ['Confident', 'Intelligent', 'Playful'],
     keywords: ['Silk', 'Owl Motif', 'Rose Tones', 'Artisan Embroidery'],
@@ -100,6 +106,7 @@ export const products: Product[] = [
     name: 'RIWAAYAT',
     motif: 'Elephant',
     price: 9500,
+    priceUsd: 200,
     category: 'Saree',
     personality: ['Heritage', 'Regal', 'Timeless'],
     keywords: ['Silk', 'Elephant Motif', 'Heritage', 'Regal'],
@@ -116,6 +123,7 @@ export const products: Product[] = [
     name: 'SUNDOWNER SILK',
     motif: 'Fish',
     price: 9500,
+    priceUsd: 200,
     category: 'Saree',
     personality: ['Playful', 'Artistic', 'Free-Spirited'],
     keywords: ['Silk', 'Fish Motif', 'Warm Tones', 'Artisan'],
@@ -132,6 +140,7 @@ export const products: Product[] = [
     name: 'CHAANDINI',
     motif: 'Designer Underskirt',
     price: 3500,
+    priceUsd: 50,
     category: 'Underskirt',
     personality: ['Regal', 'Elegant'],
     keywords: ['Underskirt', 'Silk Lining', 'Petticoat', 'Essential'],

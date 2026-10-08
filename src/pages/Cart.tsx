@@ -17,10 +17,16 @@ export default function Cart() {
   const [isCheckingOut, setIsCheckingOut] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const threshold = currency === 'USD' ? 200 * usdRate : 5000;
-  const shippingFee = currency === 'USD' ? 25 * usdRate : 500;
-  const shipping = subtotal >= threshold ? 0 : shippingFee;
-  const total = subtotal + shipping;
+  const subtotalUsd = items.reduce(
+    (sum, i) => sum + (i.product.priceUsd ?? (i.product.category === 'Saree' ? 200 : 50)) * i.quantity,
+    0
+  );
+  const threshold = currency === 'USD' ? 200 : 5000;
+  const shippingFee = currency === 'USD' ? 25 : 500;
+  const isFreeShipping = (currency === 'USD' ? subtotalUsd : subtotal) >= threshold;
+  const shipping = isFreeShipping ? 0 : shippingFee;
+  const total = subtotal + (currency === 'USD' ? shipping * usdRate : shipping);
+  const totalUsd = subtotalUsd + shipping;
 
   // Razorpay Standard Checkout Handler
   const handleRazorpayCheckout = async () => {
@@ -162,7 +168,10 @@ export default function Cart() {
 
                           {/* Price */}
                           <p className="font-playfair text-lg text-mocha-900">
-                            {formatPrice(item.product.price * item.quantity)}
+                            {formatPrice(
+                              item.product.price * item.quantity,
+                              (item.product.priceUsd ?? (item.product.category === 'Saree' ? 200 : 50)) * item.quantity
+                            )}
                           </p>
                         </div>
                       </div>
@@ -198,7 +207,7 @@ export default function Cart() {
                 <div className="space-y-4 mb-8">
                   <div className="flex justify-between font-lora text-sm text-mocha-700">
                     <span>Subtotal ({items.reduce((s, i) => s + i.quantity, 0)} items)</span>
-                    <span>{formatPrice(subtotal)}</span>
+                    <span>{formatPrice(subtotal, subtotalUsd)}</span>
                   </div>
                   <div className="flex justify-between font-lora text-sm text-mocha-700">
                     <span>Artisanal Packaging</span>
@@ -210,13 +219,16 @@ export default function Cart() {
                       {shipping === 0 ? (
                         <span className="text-forest-600 font-medium">Free</span>
                       ) : (
-                        formatPrice(shipping)
+                        formatPrice(shipping * usdRate, shipping)
                       )}
                     </span>
                   </div>
                   {shipping > 0 && (
                     <p className="font-lora text-xs text-mocha-400 italic">
-                      Add {formatPrice(threshold - subtotal)} more for free shipping
+                      Add {formatPrice(
+                        currency === 'USD' ? (threshold - subtotalUsd) * usdRate : threshold - subtotal,
+                        currency === 'USD' ? threshold - subtotalUsd : Math.round((threshold - subtotal) / usdRate)
+                      )} more for free shipping
                     </p>
                   )}
                 </div>
@@ -242,7 +254,7 @@ export default function Cart() {
                       Estimated Total
                     </span>
                     <span className="font-playfair text-xl text-mocha-900">
-                      {formatPrice(total)}
+                      {formatPrice(total, totalUsd)}
                     </span>
                   </div>
                 </div>

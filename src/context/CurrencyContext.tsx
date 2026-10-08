@@ -5,7 +5,7 @@ export type Currency = 'INR' | 'USD';
 interface CurrencyContextValue {
   currency: Currency;
   setCurrency: (currency: Currency) => void;
-  formatPrice: (inrAmount: number) => string;
+  formatPrice: (inrAmount: number, usdAmount?: number) => string;
   usdRate: number;
 }
 
@@ -25,10 +25,11 @@ export function CurrencyProvider({ children }: { children: React.ReactNode }) {
       return;
     }
 
-    // Auto-detect based on timezone
+    // Auto-detect based on timezone (Asia/Kolkata or Indian timezones -> INR, foreign -> USD)
     try {
-      const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-      if (tz && !tz.toLowerCase().includes('kolkata')) {
+      const tz = (Intl.DateTimeFormat().resolvedOptions().timeZone || '').toLowerCase();
+      const isIndia = tz.includes('kolkata') || tz.includes('calcutta') || new Date().getTimezoneOffset() === -330;
+      if (!isIndia) {
         setCurrency('USD');
       } else {
         setCurrency('INR');
@@ -43,14 +44,31 @@ export function CurrencyProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem('currency', c);
   };
 
-  const formatPrice = (inrAmount: number) => {
+  const formatPrice = (inrAmount: number, usdAmount?: number) => {
     if (currency === 'USD') {
-      const usdAmount = Math.round(inrAmount / USD_RATE);
+      let finalUsd: number;
+      if (typeof usdAmount === 'number') {
+        finalUsd = usdAmount;
+      } else if (inrAmount === 9500) {
+        // Standard saree single price is $200 in USD
+        finalUsd = 200;
+      } else if (inrAmount > 0 && inrAmount % 9500 === 0) {
+        // Multiples of saree (e.g. quantity * 9500)
+        finalUsd = (inrAmount / 9500) * 200;
+      } else if (inrAmount === 3500) {
+        // Underskirt single price is $50 in USD
+        finalUsd = 50;
+      } else if (inrAmount > 0 && inrAmount % 3500 === 0) {
+        finalUsd = (inrAmount / 3500) * 50;
+      } else {
+        finalUsd = Math.round(inrAmount / USD_RATE);
+      }
+
       return new Intl.NumberFormat('en-US', {
         style: 'currency',
         currency: 'USD',
         maximumFractionDigits: 0,
-      }).format(usdAmount);
+      }).format(finalUsd);
     }
 
     return new Intl.NumberFormat('en-IN', {
