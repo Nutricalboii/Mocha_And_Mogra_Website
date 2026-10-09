@@ -87,9 +87,10 @@ export default function Navbar({ onSearchOpen }: NavbarProps) {
             </nav>
 
             {/* Icons */}
-            <div className="flex items-center gap-4 sm:gap-5">
+            <div className="flex items-center gap-3 sm:gap-5">
               {/* Currency Toggle */}
-              <div className="hidden sm:flex items-center gap-1 font-cinzel text-[10px] tracking-[0.1em] text-mocha-600 bg-mocha-50/50 rounded-full px-2 py-1 border border-mocha-200">
+              {location.pathname === '/shop' && (
+                <div className="flex items-center gap-1 font-cinzel text-[10px] tracking-[0.1em] text-mocha-600 bg-mocha-50/50 rounded-full px-2 py-1 border border-mocha-200">
                 <button
                   onClick={() => setCurrency('INR')}
                   className={`px-2 py-1 rounded-full transition-colors ${currency === 'INR' ? 'bg-mocha-800 text-gold-200' : 'hover:bg-mocha-100'}`}
@@ -103,11 +104,12 @@ export default function Navbar({ onSearchOpen }: NavbarProps) {
                   USD
                 </button>
               </div>
+              )}
 
               <button
                 onClick={onSearchOpen}
                 aria-label="Search"
-                className="text-mocha-600 hover:text-mocha-900 transition-colors hidden md:block ml-2"
+                className="text-mocha-600 hover:text-mocha-900 transition-colors ml-1 sm:ml-2"
               >
                 <Search size={18} strokeWidth={1.5} />
               </button>
@@ -118,7 +120,7 @@ export default function Navbar({ onSearchOpen }: NavbarProps) {
               <button
                 onClick={() => navigate('/wishlist')}
                 aria-label="Wishlist"
-                className="relative text-mocha-600 hover:text-mocha-900 transition-colors hidden md:block"
+                className="relative text-mocha-600 hover:text-mocha-900 transition-colors"
               >
                 <Heart size={18} strokeWidth={1.5} />
                 {totalWishlisted > 0 && (
@@ -161,14 +163,14 @@ export default function Navbar({ onSearchOpen }: NavbarProps) {
             transition={{ duration: 0.25 }}
             className="fixed inset-0 z-40 bg-[#FFFEF7] pt-20 px-8 md:hidden"
           >
-            <nav className="flex flex-col gap-8 mt-10">
+            <nav className="flex flex-col gap-6 mt-8">
               {navLinks.map((link) => (
                 <NavLink
                   key={link.path}
                   to={link.path}
                   end={link.path === '/'}
                   className={({ isActive }) =>
-                    `font-cinzel text-2xl tracking-widest uppercase ${
+                    `font-cinzel text-lg md:text-xl tracking-widest uppercase ${
                       isActive ? 'text-mocha-900' : 'text-mocha-500'
                     }`
                   }
@@ -176,34 +178,6 @@ export default function Navbar({ onSearchOpen }: NavbarProps) {
                   {link.label}
                 </NavLink>
               ))}
-              <button
-                onClick={() => { navigate('/wishlist'); setMenuOpen(false); }}
-                className="font-cinzel text-2xl tracking-widest uppercase text-mocha-500 text-left flex items-center gap-3"
-              >
-                Wishlist
-                {totalWishlisted > 0 && (
-                  <span className="bg-mocha-800 text-gold-200 font-cinzel text-xs w-6 h-6 rounded-full flex items-center justify-center">
-                    {totalWishlisted}
-                  </span>
-                )}
-              </button>
-              <button
-                onClick={() => { navigate('/cart'); setMenuOpen(false); }}
-                className="font-cinzel text-2xl tracking-widest uppercase text-mocha-500 text-left flex items-center gap-3"
-              >
-                Cart
-                {totalItems > 0 && (
-                  <span className="bg-mocha-800 text-gold-200 font-cinzel text-xs w-6 h-6 rounded-full flex items-center justify-center">
-                    {totalItems}
-                  </span>
-                )}
-              </button>
-              <button
-                onClick={() => { onSearchOpen(); setMenuOpen(false); }}
-                className="font-cinzel text-2xl tracking-widest uppercase text-mocha-500 text-left flex items-center gap-3"
-              >
-                Search
-              </button>
             </nav>
             <div className="mt-12 flex items-center justify-center gap-2 font-cinzel text-xs tracking-[0.15em] text-mocha-600">
               <button
