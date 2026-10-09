@@ -5,13 +5,14 @@ import { products, type Product } from '../data/products';
 export interface CartItem {
   product: Product;
   quantity: number;
+  size?: string;
 }
 
 interface CartContextValue {
   items: CartItem[];
-  addItem: (product: Product) => void;
-  removeItem: (productId: number | string) => void;
-  updateQuantity: (productId: number | string, quantity: number) => void;
+  addItem: (product: Product, size?: string) => void;
+  removeItem: (productId: number | string, size?: string) => void;
+  updateQuantity: (productId: number | string, quantity: number, size?: string) => void;
   clearCart: () => void;
   totalItems: number;
   subtotal: number;
@@ -25,28 +26,28 @@ export function CartProvider({ children }: { children: ReactNode }) {
     products.map((product) => ({ product, quantity: 1 }))
   );
 
-  const addItem = useCallback((product: Product) => {
+  const addItem = useCallback((product: Product, size?: string) => {
     setItems((prev) => {
-      const existing = prev.find((i) => i.product.id === product.id);
+      const existing = prev.find((i) => i.product.id === product.id && i.size === size);
       if (existing) {
         return prev.map((i) =>
-          i.product.id === product.id ? { ...i, quantity: i.quantity + 1 } : i
+          i.product.id === product.id && i.size === size ? { ...i, quantity: i.quantity + 1 } : i
         );
       }
-      return [...prev, { product, quantity: 1 }];
+      return [...prev, { product, quantity: 1, size }];
     });
   }, []);
 
-  const removeItem = useCallback((productId: number | string) => {
-    setItems((prev) => prev.filter((i) => i.product.id !== productId));
+  const removeItem = useCallback((productId: number | string, size?: string) => {
+    setItems((prev) => prev.filter((i) => !(i.product.id === productId && i.size === size)));
   }, []);
 
-  const updateQuantity = useCallback((productId: number | string, quantity: number) => {
+  const updateQuantity = useCallback((productId: number | string, quantity: number, size?: string) => {
     if (quantity <= 0) {
-      setItems((prev) => prev.filter((i) => i.product.id !== productId));
+      setItems((prev) => prev.filter((i) => !(i.product.id === productId && i.size === size)));
     } else {
       setItems((prev) =>
-        prev.map((i) => (i.product.id === productId ? { ...i, quantity } : i))
+        prev.map((i) => i.product.id === productId && i.size === size ? { ...i, quantity } : i)
       );
     }
   }, []);

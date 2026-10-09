@@ -92,7 +92,7 @@ export default function Wishlist() {
                     </h3>
                     <div className="flex items-center justify-between">
                       <span className="font-lora text-mocha-700 font-medium">
-                        {formatPrice(product.price)}
+                        {formatPrice(product.price, product.priceUsd)}
                       </span>
                       <button
                         id={`wishlist-add-to-cart-${product.id}`}

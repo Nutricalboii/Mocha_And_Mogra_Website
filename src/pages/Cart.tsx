@@ -18,7 +18,7 @@ export default function Cart() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const subtotalUsd = items.reduce(
-    (sum, i) => sum + (i.product.priceUsd ?? (i.product.category === 'Saree' ? 200 : 50)) * i.quantity,
+    (sum, i) => sum + (i.product.priceUsd ?? (i.product.category === 'Sarees' ? 200 : 50)) * i.quantity,
     0
   );
   const threshold = currency === 'USD' ? 200 : 5000;
@@ -100,7 +100,7 @@ export default function Cart() {
                 <AnimatePresence initial={false}>
                   {items.map((item) => (
                     <motion.div
-                      key={item.product.id}
+                      key={`${item.product.id}-${item.size ?? 'default'}`}
                       layout
                       initial={{ opacity: 0, height: 0 }}
                       animate={{ opacity: 1, height: 'auto' }}
@@ -114,11 +114,17 @@ export default function Cart() {
                         style={{ borderRadius: '6px', aspectRatio: '3/4' }}
                         onClick={() => navigate('/shop')}
                       >
-                        <img
-                          src={item.product.image}
-                          alt={item.product.name}
-                          className="w-full h-full object-cover"
-                        />
+                        {item.product.image ? (
+                          <img
+                            src={item.product.image}
+                            alt={item.product.name}
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center p-3 text-center">
+                            <span className="font-lora text-xs italic text-mocha-400">Images coming soon</span>
+                          </div>
+                        )}
                       </div>
 
                       {/* Info */}
@@ -136,7 +142,7 @@ export default function Cart() {
                             </p>
                           </div>
                           <button
-                            onClick={() => removeItem(item.product.id)}
+                            onClick={() => removeItem(item.product.id, item.size)}
                             className="text-mocha-400 hover:text-mocha-800 transition-colors flex-shrink-0 p-1"
                             aria-label="Remove item"
                           >
@@ -148,7 +154,7 @@ export default function Cart() {
                           {/* Quantity */}
                           <div className="flex items-center border border-mocha-200">
                             <button
-                              onClick={() => updateQuantity(item.product.id, item.quantity - 1)}
+                              onClick={() => updateQuantity(item.product.id, item.quantity - 1, item.size)}
                               className="w-9 h-9 flex items-center justify-center text-mocha-600 hover:text-mocha-900 hover:bg-mocha-50 transition-colors"
                               aria-label="Decrease quantity"
                             >
@@ -158,7 +164,7 @@ export default function Cart() {
                               {item.quantity}
                             </span>
                             <button
-                              onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
+                              onClick={() => updateQuantity(item.product.id, item.quantity + 1, item.size)}
                               className="w-9 h-9 flex items-center justify-center text-mocha-600 hover:text-mocha-900 hover:bg-mocha-50 transition-colors"
                               aria-label="Increase quantity"
                             >
@@ -166,11 +172,13 @@ export default function Cart() {
                             </button>
                           </div>
 
+                          {item.size && <span className="font-lora text-sm text-mocha-500">Size: {item.size}</span>}
+
                           {/* Price */}
                           <p className="font-playfair text-lg text-mocha-900">
                             {formatPrice(
                               item.product.price * item.quantity,
-                              (item.product.priceUsd ?? (item.product.category === 'Saree' ? 200 : 50)) * item.quantity
+                              (item.product.priceUsd ?? (item.product.category === 'Sarees' ? 200 : 50)) * item.quantity
                             )}
                           </p>
                         </div>

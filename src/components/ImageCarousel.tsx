@@ -26,34 +26,40 @@ export default function ImageCarousel({ media, alt = 'Product Image', className 
 
   return (
     <div className={`relative group overflow-hidden ${className}`}>
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={currentIndex}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.3 }}
-          className="w-full h-full"
-        >
-          {isVideo ? (
-            <video
-              src={currentMedia}
-              className="w-full h-full object-cover"
-              autoPlay
-              muted
-              loop
-              playsInline
-            />
-          ) : (
-            <img
-              src={currentMedia}
-              alt={`${alt} - ${currentIndex + 1}`}
-              className="w-full h-full object-cover"
-              loading="lazy"
-            />
-          )}
-        </motion.div>
-      </AnimatePresence>
+      {media.length === 0 ? (
+        <div className="w-full h-full min-h-48 flex items-center justify-center bg-mocha-50 px-6 text-center">
+          <span className="font-lora text-sm italic text-mocha-400">Images coming soon</span>
+        </div>
+      ) : (
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={currentIndex}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="w-full h-full"
+          >
+            {isVideo ? (
+              <video
+                src={currentMedia}
+                className="w-full h-full object-cover"
+                autoPlay
+                muted
+                loop
+                playsInline
+              />
+            ) : (
+              <img
+                src={currentMedia}
+                alt={`${alt} - ${currentIndex + 1}`}
+                className="w-full h-full object-cover"
+                loading="lazy"
+              />
+            )}
+          </motion.div>
+        </AnimatePresence>
+      )}
 
       {media.length > 1 && (
         <>

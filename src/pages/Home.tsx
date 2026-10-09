@@ -329,7 +329,7 @@ export default function Home() {
                 <p className="font-cinzel text-xs tracking-[0.2em] uppercase text-gold-400 mb-1">
                   {product.name}
                 </p>
-                <p className="font-lora text-sm text-mocha-400">{formatPrice(product.price)}</p>
+                <p className="font-lora text-sm text-mocha-400">{formatPrice(product.price, product.priceUsd)}</p>
               </motion.div>
             ))}
           </div>

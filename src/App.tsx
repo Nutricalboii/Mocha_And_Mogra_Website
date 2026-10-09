@@ -44,6 +44,7 @@ function Layout() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [addedProduct, setAddedProduct] = useState<Product | null>(null);
+  const [addedSize, setAddedSize] = useState<string | undefined>();
   const location = useLocation();
 
   const isCheckoutFlow =
@@ -89,12 +90,13 @@ function Layout() {
       <ProductModal
         product={selectedProduct}
         onClose={() => setSelectedProduct(null)}
-        onAddedToCart={(prod) => setAddedProduct(prod)}
+        onAddedToCart={(prod, size) => { setAddedProduct(prod); setAddedSize(size); }}
       />
 
       {/* Global Added To Bag Luxury Slide-Over Drawer */}
       <AddedToBagDrawer
         product={addedProduct}
+        size={addedSize}
         onClose={() => setAddedProduct(null)}
       />
     </div>

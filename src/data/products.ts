@@ -4,11 +4,18 @@ export interface Product {
   motif: string;
   price: number;
   priceUsd?: number;
-  category: 'Saree' | 'Underskirt';
+  category: 'Blouses' | 'Sarees' | 'Underskirt';
+  collection?: 'The Occasion Edit' | 'The Café Collection';
   personality: string[];
   keywords: string[];
   story: string;
   wearFor: string;
+  description?: string[];
+  details?: string[];
+  fabric?: string;
+  washingInstructions?: string;
+  modelSize?: string;
+  sizes?: string[];
   image: string;
   images: string[];
   color: string;
@@ -22,7 +29,9 @@ export const products: Product[] = [
     motif: 'Cage',
     price: 9500,
     priceUsd: 200,
-    category: 'Saree',
+    category: 'Sarees',
+    collection: 'The Occasion Edit',
+    sizes: ['One Size'],
     personality: ['Independent', 'Bold', 'Contemporary'],
     keywords: ['Silk', 'Cage Motif', 'Deep Blue', 'Statement'],
     story:
@@ -39,7 +48,9 @@ export const products: Product[] = [
     motif: 'Pineapple',
     price: 9500,
     priceUsd: 200,
-    category: 'Saree',
+    category: 'Sarees',
+    collection: 'The Occasion Edit',
+    sizes: ['One Size'],
     personality: ['Sunny', 'Fresh', 'Effortless'],
     keywords: ['Silk', 'Pineapple Motif', 'Butter Yellow', 'Contemporary'],
     story:
@@ -56,7 +67,9 @@ export const products: Product[] = [
     motif: 'Deer',
     price: 9500,
     priceUsd: 200,
-    category: 'Saree',
+    category: 'Sarees',
+    collection: 'The Occasion Edit',
+    sizes: ['One Size'],
     personality: ['Soft', 'Romantic', 'Graceful'],
     keywords: ['Silk', 'Deer Motif', 'Ruby Tones', 'Romantic'],
     story:
@@ -73,7 +86,9 @@ export const products: Product[] = [
     motif: 'Seahorse',
     price: 9500,
     priceUsd: 200,
-    category: 'Saree',
+    category: 'Sarees',
+    collection: 'The Occasion Edit',
+    sizes: ['One Size'],
     personality: ['Elegant', 'Refined', 'Quiet Luxury'],
     keywords: ['Silk', 'Seahorse Motif', 'Artisan Embroidery', 'Premium'],
     story:
@@ -90,7 +105,9 @@ export const products: Product[] = [
     motif: 'Owl',
     price: 9500,
     priceUsd: 200,
-    category: 'Saree',
+    category: 'Sarees',
+    collection: 'The Occasion Edit',
+    sizes: ['One Size'],
     personality: ['Confident', 'Intelligent', 'Playful'],
     keywords: ['Silk', 'Owl Motif', 'Rose Tones', 'Artisan Embroidery'],
     story:
@@ -107,7 +124,9 @@ export const products: Product[] = [
     motif: 'Elephant',
     price: 9500,
     priceUsd: 200,
-    category: 'Saree',
+    category: 'Sarees',
+    collection: 'The Occasion Edit',
+    sizes: ['One Size'],
     personality: ['Heritage', 'Regal', 'Timeless'],
     keywords: ['Silk', 'Elephant Motif', 'Heritage', 'Regal'],
     story:
@@ -124,7 +143,9 @@ export const products: Product[] = [
     motif: 'Fish',
     price: 9500,
     priceUsd: 200,
-    category: 'Saree',
+    category: 'Sarees',
+    collection: 'The Occasion Edit',
+    sizes: ['One Size'],
     personality: ['Playful', 'Artistic', 'Free-Spirited'],
     keywords: ['Silk', 'Fish Motif', 'Warm Tones', 'Artisan'],
     story:
@@ -137,11 +158,12 @@ export const products: Product[] = [
   },
   {
     id: 8,
-    name: 'CHAANDINI',
+    name: 'Chandini',
     motif: 'Designer Underskirt',
     price: 3500,
-    priceUsd: 50,
+    priceUsd: 120,
     category: 'Underskirt',
+    sizes: ['S', 'M', 'L', 'XL', 'XXL'],
     personality: ['Regal', 'Elegant'],
     keywords: ['Underskirt', 'Silk Lining', 'Petticoat', 'Essential'],
     story:
@@ -151,5 +173,105 @@ export const products: Product[] = [
     images: ['https://res.cloudinary.com/xtrw55ut/image/upload/q_auto,f_auto,w_800/rm4.webp', 'https://res.cloudinary.com/xtrw55ut/image/upload/q_auto,f_auto,w_800/rm1.webp', 'https://res.cloudinary.com/xtrw55ut/image/upload/q_auto,f_auto,w_800/rm2.webp'],
     color: '#D8D0C4',
     shopifyVariantId: '48996875534585', // CHAANDINI
+  },
+  {
+    id: 'chandi',
+    name: 'Chandi — Silver',
+    motif: 'Metallic',
+    price: 2100,
+    priceUsd: 100,
+    category: 'Blouses',
+    personality: ['Versatile', 'Easy to style', 'Polished'],
+    keywords: ['Metallic finish', 'Silver', 'Versatile', 'Easy to style'],
+    story:
+      'A versatile metallic blouse designed to work with almost any saree. The silver finish adds just the right amount of shine without overpowering the saree, making it easy to dress up or down.',
+    wearFor:
+      'Pair it with silk, prints, solids or even your everyday sarees. Wear it for weddings, cocktails, festive celebrations or simply when you want to give an old saree a completely new look.',
+    description: [
+      'A versatile metallic blouse designed to work with almost any saree. The silver finish adds just the right amount of shine without overpowering the saree, making it easy to dress up or down.',
+      'Pair it with silk, prints, solids or even your everyday sarees. Wear it for weddings, cocktails, festive celebrations or simply when you want to give an old saree a completely new look.',
+    ],
+    details: ['Metallic finish', 'Versatile', 'Easy to style', 'Pairs with multiple sarees'],
+    fabric: 'To be confirmed',
+    washingInstructions: 'Dry Clean Only',
+    modelSize: 'Small',
+    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
+    image: '',
+    images: [],
+    color: '#C4904E',
+  },
+  {
+    id: 'tamara',
+    name: 'Tamara — Copper',
+    motif: 'Metallic',
+    price: 2100,
+    priceUsd: 100,
+    category: 'Blouses',
+    personality: ['Warm', 'Versatile', 'Effortless'],
+    keywords: ['Metallic finish', 'Copper', 'Versatile', 'Easy to style'],
+    story:
+      'A warm metallic copper blouse that brings an effortless richness to any saree. Designed as a versatile wardrobe piece, Tamara works beautifully with both traditional and contemporary sarees.',
+    wearFor:
+      'From weddings and cocktails to Garba, Dandiya and evening celebrations, it is the kind of blouse you can keep coming back to — simply change the saree and create an entirely new look each time.',
+    description: [
+      'A warm metallic copper blouse that brings an effortless richness to any saree. Designed as a versatile wardrobe piece, Tamara works beautifully with both traditional and contemporary sarees.',
+      'From weddings and cocktails to Garba, Dandiya and evening celebrations, it is the kind of blouse you can keep coming back to — simply change the saree and create an entirely new look each time.',
+    ],
+    details: ['Metallic finish', 'Versatile', 'Easy to style', 'Pairs with multiple sarees'],
+    fabric: 'To be confirmed',
+    washingInstructions: 'Dry Clean Only',
+    modelSize: 'Small',
+    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
+    image: '',
+    images: [],
+    color: '#A67340',
+  },
+  {
+    id: 'pistachio',
+    name: 'Pistachio',
+    motif: 'Polka dot',
+    price: 9500,
+    priceUsd: 200,
+    category: 'Sarees',
+    collection: 'The Café Collection',
+    sizes: ['One Size'],
+    personality: ['Playful', 'Easy-going', 'Daytime'],
+    keywords: ['Polka dot', 'Daytime', 'Soft fabric', 'Delicate detailing'],
+    story:
+      'A soft, playful polka-dot saree made for the daytime.',
+    wearFor:
+      'Its comfortable fabric and delicate detailing make it easy to wear from work to brunch, lunch dates and daytime events. Pair it with a statement blouse for a more contemporary look or keep it classic and understated.',
+    description: [
+      'A soft, playful polka-dot saree made for the daytime.',
+      'Its comfortable fabric and delicate detailing make it easy to wear from work to brunch, lunch dates and daytime events. Pair it with a statement blouse for a more contemporary look or keep it classic and understated.',
+      'A saree you can actually reach for often — not just save for special occasions.',
+    ],
+    image: '',
+    images: [],
+    color: '#B9C6A0',
+  },
+  {
+    id: 'strawberry-latte',
+    name: 'Strawberry Latte',
+    motif: 'Polka dot',
+    price: 9500,
+    priceUsd: 200,
+    category: 'Sarees',
+    collection: 'The Café Collection',
+    sizes: ['One Size'],
+    personality: ['Feminine', 'Playful', 'Effortless'],
+    keywords: ['Pink polka dot', 'Daytime', 'Soft fabric', 'Easy-going'],
+    story:
+      'Our pink polka-dot saree — feminine, playful and effortlessly easy to style.',
+    wearFor:
+      'Made for coffee dates, brunches, work days and daytime celebrations, it combines a soft fabric with delicate detailing and an easy-going silhouette.',
+    description: [
+      'Our pink polka-dot saree — feminine, playful and effortlessly easy to style.',
+      'Made for coffee dates, brunches, work days and daytime celebrations, it combines a soft fabric with delicate detailing and an easy-going silhouette.',
+      'Pair it with a statement blouse, a metallic blouse or your favourite classic blouse to create a completely different look each time.',
+    ],
+    image: '',
+    images: [],
+    color: '#D5A6A7',
   },
 ];
