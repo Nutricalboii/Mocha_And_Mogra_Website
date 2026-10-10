@@ -12,7 +12,6 @@ import ProductModal from './components/ProductModal';
 import AddedToBagDrawer from './components/AddedToBagDrawer';
 import SplashLanding from './components/SplashLanding';
 import WhatsAppButton from './components/WhatsAppButton';
-
 import Home from './pages/Home';
 import Shop from './pages/Shop';
 import OurStory from './pages/OurStory';
@@ -75,6 +74,7 @@ function Layout() {
       </main>
       {!isCheckoutFlow && <Footer />}
       {!isCheckoutFlow && <WhatsAppButton phoneNumber="919999999999" />}
+
 
       {/* Global Search Overlay */}
       <SearchOverlay

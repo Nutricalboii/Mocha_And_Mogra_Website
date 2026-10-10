@@ -1,24 +1,24 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Minus, Plus, X, ShoppingBag, ArrowRight, Tag, Loader2, CreditCard, ShieldCheck } from 'lucide-react';
+import { Minus, Plus, X, ShoppingBag, ArrowRight, Tag, Loader2, ShieldCheck } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { createShopifyCheckout } from '../lib/shopify';
 import { useCurrency } from '../context/CurrencyContext';
-import { initiateRazorpayPayment } from '../lib/razorpay';
-import { useAuth } from '../context/AuthContext';
+
+import AgePrivacyPopup from '../components/AgePrivacyPopup';
 
 export default function Cart() {
   const navigate = useNavigate();
-  const { items, removeItem, updateQuantity, subtotal, clearCart } = useCart();
+  const { items, removeItem, updateQuantity, subtotal } = useCart();
   const { currency, formatPrice, usdRate } = useCurrency();
-  const { user } = useAuth();
 
   const [isCheckingOut, setIsCheckingOut] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [showAgePopup, setShowAgePopup] = useState(false);
 
   const subtotalUsd = items.reduce(
-    (sum, i) => sum + (i.product.priceUsd ?? (i.product.category === 'Sarees' ? 200 : 50)) * i.quantity,
+    (sum, i) => sum + (i.product.priceUsd ?? Math.round(i.product.price / usdRate)) * i.quantity,
     0
   );
   const threshold = currency === 'USD' ? 200 : 5000;
@@ -27,43 +27,15 @@ export default function Cart() {
   const shipping = isFreeShipping ? 0 : shippingFee;
   const total = subtotal + (currency === 'USD' ? shipping * usdRate : shipping);
   const totalUsd = subtotalUsd + shipping;
-
-  // Razorpay Standard Checkout Handler
-  const handleRazorpayCheckout = async () => {
-    setErrorMessage(null);
-    setIsCheckingOut(true);
-
-    await initiateRazorpayPayment({
-      amount: total,
-      name: 'Mocha & Mogra',
-      description: `Purchase of ${items.reduce((acc, item) => acc + item.quantity, 0)} item(s)`,
-      prefill: {
-        name: user?.user_metadata?.full_name || '',
-        email: user?.email || '',
-      },
-      onSuccess: (response) => {
-        setIsCheckingOut(false);
-        clearCart();
-        navigate('/order-confirmation', {
-          state: {
-            paymentId: response.payment_id,
-            orderId: response.order_id,
-          },
-        });
-      },
-      onError: (err) => {
-        setIsCheckingOut(false);
-        setErrorMessage(err);
-      },
-      onDismiss: () => {
-        setIsCheckingOut(false);
-      },
-    });
-  };
-
-  // Optional Shopify Checkout fallback
   const handleShopifyCheckout = async () => {
+    const hasAccepted = localStorage.getItem('mocha_mogra_policy_accepted');
+    if (!hasAccepted) {
+      setShowAgePopup(true);
+      return;
+    }
+
     try {
+      setErrorMessage(null);
       setIsCheckingOut(true);
       const itemsPayload = items.map((item) => ({
         variantId: item.product.shopifyVariantId || item.product.id,
@@ -72,8 +44,8 @@ export default function Cart() {
       const checkoutUrl = await createShopifyCheckout(itemsPayload);
       window.location.href = checkoutUrl;
     } catch (err) {
-      console.warn('Redirecting to Razorpay checkout:', err);
-      handleRazorpayCheckout();
+      console.warn('Redirecting to Shopify checkout failed:', err);
+      setErrorMessage('Checkout is currently unavailable. Please try again later.');
     } finally {
       setIsCheckingOut(false);
     }
@@ -106,13 +78,13 @@ export default function Cart() {
                       animate={{ opacity: 1, height: 'auto' }}
                       exit={{ opacity: 0, height: 0 }}
                       transition={{ duration: 0.3 }}
-                      className="border-b border-mocha-200 py-8 flex gap-6"
+                      className="border-b border-mocha-200 py-6 md:py-8 flex gap-4 md:gap-6"
                     >
                       {/* Arch image */}
                       <div
-                        className="flex-shrink-0 w-28 overflow-hidden bg-mocha-100 cursor-pointer"
+                        className="flex-shrink-0 w-24 md:w-28 overflow-hidden bg-mocha-100 cursor-pointer"
                         style={{ borderRadius: '6px', aspectRatio: '3/4' }}
-                        onClick={() => navigate('/shop')}
+                        onClick={() => navigate(`/shop?product=${item.product.id}`)}
                       >
                         {item.product.image ? (
                           <img
@@ -131,10 +103,13 @@ export default function Cart() {
                       <div className="flex-1 min-w-0">
                         <div className="flex items-start justify-between gap-4">
                           <div>
-                            <p className="font-cinzel text-xs tracking-[0.2em] uppercase text-mocha-500 mb-1">
+                            <p className="font-cinzel text-[10px] md:text-xs tracking-[0.2em] uppercase text-mocha-500 mb-1">
                               {item.product.category} · {item.product.motif} Motif
                             </p>
-                            <h3 className="font-playfair text-xl text-mocha-900 mb-1">
+                            <h3
+                              className="font-playfair text-lg md:text-xl text-mocha-900 mb-1 cursor-pointer hover:underline"
+                              onClick={() => navigate(`/shop?product=${item.product.id}`)}
+                            >
                               {item.product.name}
                             </h3>
                             <p className="font-lora text-sm text-mocha-500 italic">
@@ -178,7 +153,7 @@ export default function Cart() {
                           <p className="font-playfair text-lg text-mocha-900">
                             {formatPrice(
                               item.product.price * item.quantity,
-                              (item.product.priceUsd ?? (item.product.category === 'Sarees' ? 200 : 50)) * item.quantity
+                              (item.product.priceUsd ?? Math.round(item.product.price / usdRate)) * item.quantity
                             )}
                           </p>
                         </div>
@@ -227,7 +202,10 @@ export default function Cart() {
                       {shipping === 0 ? (
                         <span className="text-forest-600 font-medium">Free</span>
                       ) : (
-                        formatPrice(shipping * usdRate, shipping)
+                        formatPrice(
+                          currency === 'USD' ? shipping * usdRate : shipping,
+                          currency === 'USD' ? shipping : Math.round(shipping / usdRate)
+                        )
                       )}
                     </span>
                   </div>
@@ -267,39 +245,29 @@ export default function Cart() {
                   </div>
                 </div>
 
-                {/* Primary Button: Pay with Razorpay */}
+                {/* Primary Button: Shopify Checkout */}
                 <button
-                  onClick={handleRazorpayCheckout}
+                  onClick={handleShopifyCheckout}
                   disabled={isCheckingOut}
                   className="w-full btn-primary-filled justify-center py-4 text-sm flex items-center gap-2 mb-3"
                 >
                   {isCheckingOut ? (
                     <>
-                      Processing Payment...
+                      Processing Checkout...
                       <Loader2 size={14} className="animate-spin" strokeWidth={1.5} />
                     </>
                   ) : (
                     <>
-                      <CreditCard size={16} strokeWidth={1.5} />
-                      Pay with Razorpay
+                      Checkout via Shopify
                       <ArrowRight size={14} strokeWidth={1.5} />
                     </>
                   )}
                 </button>
 
-                {/* Secondary Button: Shopify Checkout */}
-                <button
-                  onClick={handleShopifyCheckout}
-                  disabled={isCheckingOut}
-                  className="w-full border border-mocha-300 text-mocha-800 hover:bg-mocha-50 font-cinzel text-xs tracking-[0.15em] uppercase justify-center py-3 text-center transition-colors block"
-                >
-                  Checkout via Shopify
-                </button>
-
                 <div className="flex items-center justify-center gap-2 text-mocha-400 mt-5">
                   <ShieldCheck size={14} strokeWidth={1.5} />
                   <p className="font-cinzel text-[9px] tracking-[0.2em] uppercase">
-                    256-Bit SSL Encrypted Razorpay Checkout
+                    Secure Shopify Checkout
                   </p>
                 </div>
               </div>
@@ -307,6 +275,14 @@ export default function Cart() {
           </div>
         )}
       </div>
+
+      <AgePrivacyPopup
+        isOpen={showAgePopup}
+        onAccept={() => {
+          setShowAgePopup(false);
+          handleShopifyCheckout();
+        }}
+      />
     </div>
   );
 }
@@ -317,7 +293,7 @@ function EmptyCart({ onShop }: { onShop: () => void }) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
-      className="flex flex-col items-center justify-center py-28 text-center"
+      className="flex flex-col items-center justify-center py-16 md:py-28 text-center"
     >
       <ShoppingBag size={40} className="text-mocha-300 mb-6" strokeWidth={1} />
       <h2 className="font-playfair text-3xl text-mocha-900 mb-4">Your cart is empty.</h2>

@@ -34,7 +34,7 @@ export function CurrencyProvider({ children }: { children: React.ReactNode }) {
       } else {
         setCurrency('INR');
       }
-    } catch (error) {
+    } catch {
       setCurrency('INR');
     }
   }, []);
@@ -46,23 +46,9 @@ export function CurrencyProvider({ children }: { children: React.ReactNode }) {
 
   const formatPrice = (inrAmount: number, usdAmount?: number) => {
     if (currency === 'USD') {
-      let finalUsd: number;
-      if (typeof usdAmount === 'number') {
-        finalUsd = usdAmount;
-      } else if (inrAmount === 9500) {
-        // Standard saree single price is $200 in USD
-        finalUsd = 200;
-      } else if (inrAmount > 0 && inrAmount % 9500 === 0) {
-        // Multiples of saree (e.g. quantity * 9500)
-        finalUsd = (inrAmount / 9500) * 200;
-      } else if (inrAmount === 3500) {
-        // Underskirt single price is $50 in USD
-        finalUsd = 50;
-      } else if (inrAmount > 0 && inrAmount % 3500 === 0) {
-        finalUsd = (inrAmount / 3500) * 50;
-      } else {
-        finalUsd = Math.round(inrAmount / USD_RATE);
-      }
+      const finalUsd = typeof usdAmount === 'number'
+        ? usdAmount
+        : Math.round(inrAmount / USD_RATE);
 
       return new Intl.NumberFormat('en-US', {
         style: 'currency',

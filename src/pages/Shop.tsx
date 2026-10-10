@@ -1,4 +1,5 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { SlidersHorizontal, X, Check, Heart } from 'lucide-react';
 import { products as localProducts } from '../data/products';
@@ -39,6 +40,19 @@ export default function Shop() {
   const [filters, setFilters] = useState<Filters>(EMPTY_FILTERS);
   const { formatPrice } = useCurrency();
   const { toggleWishlist: wishlistToggle, isWishlisted: checkWishlisted } = useWishlist();
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  useEffect(() => {
+    const productId = searchParams.get('product');
+    if (productId && products.length > 0) {
+      const p = products.find((prod) => prod.id.toString() === productId);
+      if (p) {
+        setSelectedProduct(p);
+      }
+      searchParams.delete('product');
+      setSearchParams(searchParams, { replace: true });
+    }
+  }, [searchParams, products, setSearchParams]);
 
   const activeFilterCount =
     filters.categories.length + filters.collections.length + filters.priceRanges.length + filters.personalities.length;
@@ -66,7 +80,6 @@ export default function Shop() {
       <ShopItemListJsonLd products={filtered} />
       <BreadcrumbJsonLd crumbs={[{ name: 'Home', path: '/' }, { name: 'Shop', path: '/shop' }]} />
       <div className="max-w-7xl mx-auto px-6 lg:px-10">
-        {/* Header */}
         <div className="text-center mb-16">
           <motion.p
             initial={{ opacity: 0, y: 10 }}
@@ -74,15 +87,15 @@ export default function Shop() {
             transition={{ duration: 0.5 }}
             className="section-label mb-4"
           >
-            The Wardrobe
+            Shop
           </motion.p>
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
-            className="font-cinzel text-4xl md:text-5xl tracking-widest text-mocha-900 uppercase"
+            className="font-cinzel text-4xl md:text-6xl tracking-widest text-mocha-900 uppercase"
           >
-            Shop
+            THE WARDROBE
           </motion.h1>
           <motion.p
             initial={{ opacity: 0 }}
@@ -163,7 +176,7 @@ export default function Shop() {
         </p>
 
         {/* Product Grid */}
-        <motion.div layout className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-14">
+        <motion.div layout className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-10 md:gap-x-6 md:gap-y-14">
           <AnimatePresence mode="popLayout">
             {filtered.map((product, i) => (
               <ProductCard
